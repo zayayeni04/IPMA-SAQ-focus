@@ -1,0 +1,643 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPMA Level D — SAQ Flashcard Drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#e9edf2; --grid:rgba(28,58,95,0.055);
+    --ink:#16232f; --muted:#5c6b78; --card:#fff; --line:#d6dde5;
+    --primary:#2d5bd7; --primary-soft:#e7edfb;
+    --green:#1f9d6b; --amber:#dd9526; --red:#d5485f;
+    --green-soft:#e4f4ec; --amber-soft:#fbf1dd; --red-soft:#fbe6ea;
+    --persp:#7a4fd0; --people:#c65d21; --pract:#2d7fb8; --tech:#3f7d63;
+    --persp-soft:#efe8fb; --people-soft:#fbeadd; --pract-soft:#e3f0f9; --tech-soft:#e3f2eb;
+    --shadow:0 18px 40px -18px rgba(20,40,70,.35); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:"Inter",system-ui,sans-serif;color:var(--ink);
+    background-color:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:26px 26px;min-height:100vh;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:22px 18px 60px}
+
+  header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .brand h1{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(20px,4vw,27px);letter-spacing:-.02em;margin:0}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--primary)}
+  .sub{color:var(--muted);font-size:13px;margin:2px 0 14px;line-height:1.55}
+
+  .crosslink{display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+    background:var(--card);border:1px solid var(--line);border-radius:99px;
+    padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink);transition:.15s;margin-bottom:18px}
+  .crosslink:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-soft)}
+  .crosslink .cl-ico{font-family:"IBM Plex Mono";font-weight:700}
+
+  .progress{margin-bottom:16px}
+  .bar{display:flex;height:12px;border-radius:99px;overflow:hidden;background:#dbe2ea;border:1px solid var(--line)}
+  .bar span{transition:width .4s ease}
+  .seg-g{background:var(--green)} .seg-a{background:var(--amber)} .seg-r{background:var(--red)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--muted)}
+  .legend b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:1px}
+  .dot-g{background:var(--green)} .dot-a{background:var(--amber)} .dot-r{background:var(--red)} .dot-u{background:#c4cdd6}
+
+  .filter-label{font-family:"IBM Plex Mono";font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{font-size:12.5px;font-weight:500;cursor:pointer;border:1px solid var(--line);background:var(--card);
+    color:var(--muted);padding:7px 13px;border-radius:99px;transition:.15s;user-select:none}
+  .chip:hover{border-color:#b9c4cf;color:var(--ink)}
+  .chip.active{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chip .c-count{font-family:"IBM Plex Mono";font-size:11px;opacity:.65;margin-left:5px}
+  .chip.a-persp.active{background:var(--persp);border-color:var(--persp)}
+  .chip.a-people.active{background:var(--people);border-color:var(--people)}
+  .chip.a-pract.active{background:var(--pract);border-color:var(--pract)}
+  .chip.a-tech.active{background:var(--tech);border-color:var(--tech)}
+
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .toggle{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+  .toggle button{font-size:12.5px;font-weight:500;border:0;background:transparent;color:var(--muted);padding:8px 14px;cursor:pointer;transition:.15s}
+  .toggle button.active{background:var(--primary-soft);color:var(--primary);font-weight:600}
+  .btn{font-size:12.5px;font-weight:500;cursor:pointer;border:1px solid var(--line);background:var(--card);
+    color:var(--ink);padding:8px 14px;border-radius:10px;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+  .btn:hover{border-color:#b9c4cf;background:#f6f8fb}
+  .spacer{flex:1 1 auto}
+
+  .scene{perspective:1600px;margin-bottom:16px}
+  .card{position:relative;width:100%;min-height:62vh;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.15,.2,1)}
+  .card.flipped{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:26px 26px 22px;display:flex;flex-direction:column;overflow-y:auto;cursor:pointer}
+  .face.back{transform:rotateY(180deg)}
+  .face::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;border-radius:var(--radius) var(--radius) 0 0;background:var(--edge,var(--line))}
+  .meta{display:flex;align-items:center;gap:9px;margin-bottom:16px;flex-wrap:wrap}
+  .code{font-family:"IBM Plex Mono";font-size:12px;font-weight:600;padding:3px 9px;border-radius:6px}
+  .c-persp{color:var(--persp);background:var(--persp-soft)} .c-people{color:var(--people);background:var(--people-soft)}
+  .c-pract{color:var(--pract);background:var(--pract-soft)} .c-tech{color:var(--tech);background:var(--tech-soft)}
+  .topic-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .status-pill{margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px}
+  .st-g{background:var(--green-soft);color:var(--green)} .st-a{background:var(--amber-soft);color:var(--amber)}
+  .st-r{background:var(--red-soft);color:var(--red)} .st-u{background:#eef2f6;color:var(--muted)}
+
+  .q-label,.a-label{font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .q-text{font-family:"Space Grotesk";font-weight:600;font-size:clamp(18px,3.2vw,23px);line-height:1.34;letter-spacing:-.01em}
+  .a-text{font-size:14.5px;line-height:1.6}
+  .a-text p{margin:0 0 11px} .a-text p:last-child{margin-bottom:0}
+  .a-text .kci{font-family:"IBM Plex Mono";font-size:13px;color:var(--ink);background:#f2f5f8;padding:2px 6px;border-radius:5px;margin-right:4px}
+  .flip-hint{margin-top:auto;padding-top:18px;color:var(--muted);font-size:12.5px;display:flex;align-items:center;gap:7px}
+  .kbd{font-family:"IBM Plex Mono";font-size:11px;background:#eef2f6;border:1px solid var(--line);
+    border-bottom-width:2px;border-radius:5px;padding:1px 6px;color:var(--ink)}
+
+  .rate{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+  .rate button{font-weight:600;font-size:13.5px;cursor:pointer;border:1.5px solid;padding:13px 8px;border-radius:12px;
+    transition:.15s;display:flex;flex-direction:column;gap:2px;align-items:center;background:var(--card)}
+  .rate .sub-k{font-family:"IBM Plex Mono";font-size:10px;font-weight:500;opacity:.7}
+  .r-red{border-color:var(--red);color:var(--red)} .r-red:hover{background:var(--red-soft)}
+  .r-amber{border-color:var(--amber);color:var(--amber)} .r-amber:hover{background:var(--amber-soft)}
+  .r-green{border-color:var(--green);color:var(--green)} .r-green:hover{background:var(--green-soft)}
+
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .counter{font-family:"IBM Plex Mono";font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .counter b{color:var(--ink)}
+
+  .empty{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:48px 26px;text-align:center;min-height:62vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+  .empty h2{font-family:"Space Grotesk";font-size:22px;margin:0}
+  .empty p{color:var(--muted);margin:0;max-width:380px;line-height:1.55}
+  .empty .big{font-size:40px}
+
+  footer{margin-top:26px;text-align:center;color:var(--muted);font-size:11.5px;line-height:1.6}
+  @media (max-width:520px){.face{padding:20px 18px 18px}.rate button{padding:12px 4px}}
+  @media (prefers-reduced-motion:reduce){.card{transition:none}.bar span{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand"><h1>SAQ Drill</h1></div>
+    <span class="eyebrow">IPMA Level D · All Competences</span>
+  </header>
+  <p class="sub">Active-recall flashcards for the short-answer paper, covering all 14 competence elements across Perspective, People and Practice — plus exam technique. Read the question, answer aloud <em>from memory</em>, then flip and rate yourself honestly; the drill re-surfaces what you rate weak.</p>
+
+  <a class="crosslink" href="exam.html"><span>Ready to test yourself? Take the timed practice exam</span><span class="cl-ico">→</span></a>
+
+  <div class="progress">
+    <div class="bar" id="bar">
+      <span class="seg-g" id="segG" style="width:0%"></span>
+      <span class="seg-a" id="segA" style="width:0%"></span>
+      <span class="seg-r" id="segR" style="width:0%"></span>
+    </div>
+    <div class="legend">
+      <span><span class="dot dot-g"></span>Mastered <b id="cntG">0</b></span>
+      <span><span class="dot dot-a"></span>Almost <b id="cntA">0</b></span>
+      <span><span class="dot dot-r"></span>Review <b id="cntR">0</b></span>
+      <span><span class="dot dot-u"></span>Unseen <b id="cntU">0</b></span>
+    </div>
+  </div>
+
+  <p class="filter-label">Area</p>
+  <div class="chips" id="areaChips"></div>
+  <p class="filter-label">Competence element</p>
+  <div class="chips" id="topicChips"></div>
+
+  <div class="toolbar">
+    <div class="toggle" id="modeToggle">
+      <button data-mode="all" class="active">All cards</button>
+      <button data-mode="weak">Drill weak</button>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn" id="shuffleBtn">↻ Shuffle</button>
+    <button class="btn" id="resetBtn">Reset progress</button>
+  </div>
+
+  <div id="stage"></div>
+
+  <footer>
+    ICB4 · Perspective 4.3.2 / 4.3.4 / 4.3.5 · People 4.4.4–4.4.8 · Practice 4.5.4 / 4.5.5 / 4.5.6 / 4.5.7 / 4.5.8 / 4.5.12<br>
+    Keyboard: <span class="kbd">Space</span> flip · <span class="kbd">←</span>/<span class="kbd">→</span> navigate · <span class="kbd">1</span> review · <span class="kbd">2</span> almost · <span class="kbd">3</span> mastered
+  </footer>
+</div>
+
+<script>
+/* ================= TOPICS ================= */
+const TOPICS = {
+  gov:        {name:"Governance & structures", code:"4.3.2",  area:"Perspective"},
+  power:      {name:"Power and interest",      code:"4.3.4",  area:"Perspective"},
+  culture:    {name:"Culture and values",      code:"4.3.5",  area:"Perspective"},
+  rel:        {name:"Relationships & engagement",code:"4.4.4",area:"People"},
+  lead:       {name:"Leadership",              code:"4.4.5",  area:"People"},
+  team:       {name:"Teamwork",                code:"4.4.6",  area:"People"},
+  conflict:   {name:"Conflict and crisis",     code:"4.4.7",  area:"People"},
+  resourceful:{name:"Resourcefulness",         code:"4.4.8",  area:"People"},
+  time:       {name:"Time",                    code:"4.5.4",  area:"Practice"},
+  orginfo:    {name:"Organisation & Information",code:"4.5.5",area:"Practice"},
+  quality:    {name:"Quality",                 code:"4.5.6",  area:"Practice"},
+  finance:    {name:"Finance",                 code:"4.5.7",  area:"Practice"},
+  resources:  {name:"Resources",               code:"4.5.8",  area:"Practice"},
+  stake:      {name:"Stakeholders",            code:"4.5.12", area:"Practice"},
+  technique:  {name:"Exam technique",          code:"—",      area:"Technique"},
+};
+const AREAS=["Perspective","People","Practice","Technique"];
+const AREA_CLASS={Perspective:"persp",People:"people",Practice:"pract",Technique:"tech"};
+const AREA_COLOR={Perspective:"var(--persp)",People:"var(--people)",Practice:"var(--pract)",Technique:"var(--tech)"};
+
+/* ================= CARDS =================
+   a: array of paragraphs. [[x]] renders x as a mono KCI chip. */
+const CARDS = [
+/* ---------------- 4.3.2 GOVERNANCE, STRUCTURES AND PROCESSES ---------------- */
+{t:"gov",q:"What is the purpose of the Governance, structures and processes competence element?",
+ a:["It defines understanding of, and alignment with, the organisational structures, systems and processes that support projects and influence how they are organised, implemented and managed.","These comprise both temporary systems (e.g. projects and programmes) and permanent systems (e.g. programme and portfolio management, financial and administrative systems).","The purpose is to enable the PM to understand how to effectively participate in, and manage the impact of, governance, structures and processes on projects."]},
+{t:"gov",q:"Name the seven KCIs of Governance, structures and processes.",
+ a:["[[4.3.2.1]] Know the principles of project management and the way they are implemented","[[4.3.2.2]] Know and apply the principles of programme management","[[4.3.2.3]] Know and apply the principles of portfolio management","[[4.3.2.4]] Align the project with supporting functions","[[4.3.2.5]] Align the project with decision-making and reporting structures and quality requirements","[[4.3.2.6]] Align the project with human resource processes and functions","[[4.3.2.7]] Align the project with finance and control processes and functions"]},
+{t:"gov",q:"Describe the three common organisational structures.",
+ a:["Functional — used mainly where the project lies entirely or mainly within a single function; employees report to one functional manager and work is grouped by expertise.","Project — used mainly on large-scale, long-term projects; teams are formed specifically for the project and disbanded when it ends, reporting to the project manager.","Matrix — the most common form; teams are drawn from different functions, employees report to two managers (a functional manager and a project manager), and resources are shared across multiple projects."]},
+{t:"gov",q:"How does the organisational structure affect the project manager's authority?",
+ a:["In a functional organisation the PM has limited decision-making power, since employees answer to their functional manager.","In a matrix the PM shares authority with functional managers, so clearly defined escalation paths are needed.","In a pure project organisation the PM holds high authority, with employees reporting directly to them, supported by governance bodies such as steering committees and sponsors."]},
+{t:"gov",q:"What is the key challenge in aligning a project with organisational structures and processes?",
+ a:["A key challenge is to balance the use of compulsory and optional structures and processes for optimal effect and benefit to the project.","The PM may be required to provide data to the governance process and to work within existing structures and processes.","Some projects may themselves result in changes to structures and processes.","The PM should also be able to review and apply feedback and lessons learned from previous projects."]},
+{t:"gov",q:"Distinguish individual project management maturity from organisational project management maturity.",
+ a:["Individual maturity is how competent a PM is in knowledge and the ability to apply it effectively in context. Stages: Knowledge → Application → Independence → Adaptive → Role model / leader.","Organisational maturity is the ability of an organisation to deliver projects successfully and sustainably in line with its strategy. Stages: Ad hoc → Repeatable → Defined → Managed → Optimised.","The PM should be able to explain and identify the current maturity level of an organisation."]},
+{t:"gov",q:"Define a programme and programme management.",
+ a:["A programme is a temporary organisation of interrelated programme components managed in a coordinated way to enable the implementation of change and the realisation of benefits.","Outputs from projects result in outcomes and changes which align to deliver benefits.","Programme management coordinates multiple projects aligned to the programme's governance and makes key decisions about them.","Programme managers take project outputs and manage the changes needed to create business outcomes, manage cross-project benefits, and manage stakeholders across the programme."]},
+{t:"gov",q:"How should a project manager align a project with a programme? [[4.3.2.2]]",
+ a:["If the project is part of a programme, the PM must align the project with the programme and understand how the principles of programme management are implemented in the organisation.","Dependencies between the project and the programme, and between different projects within the programme, should be analysed in terms of input, goals, outcomes, etc.","Dealing with those dependencies means setting up and maintaining interfaces between the project and the programme.","The PM should be able to explain the characteristics of a programme — goals, inputs, outputs, outcomes, benefits."]},
+{t:"gov",q:"Define a portfolio and state the purposes of portfolio management.",
+ a:["A portfolio is a set of projects and/or programmes, not necessarily related, brought together to provide optimum use of the organisation's resources and to achieve its strategic goals while minimising portfolio risk.","Purposes: to align projects with strategy; to maintain a balance of various project types within the portfolio.","To ensure the portfolio fits resource capability so the organisation can sustain maximum value from project investments.","To ensure the organisation constrains its overall threats to acceptable levels."]},
+{t:"gov",q:"How should a project manager work within portfolio management? [[4.3.2.3]]",
+ a:["Understand how portfolio management is implemented in the organisation and identify the impact of the project on the portfolio.","Consider portfolio constraints when determining project resource utilisation.","Use portfolio communication channels to positively influence project performance.","Know the vertical and horizontal lines of communication as part of the overall coordination process with a programme or portfolio, and understand portfolio CSFs and KPIs."]},
+{t:"gov",q:"Describe project supporting functions and how a PM should use them. [[4.3.2.4]]",
+ a:["Supporting functions (a project office, project management office or similar) provide multifaceted support in relation to organisation, planning, reporting, meeting management and documentation.","Examples of supporting structures are line functions such as human resources, finance and control, and IT. Mature project organisations may provide dedicated support through a PMO.","The PM should know the relevant contact people, and establish and maintain good relationships with them to ensure the necessary support.","The PM should know their people, processes and services, use them for efficient support, and apply the organisation's reporting standards using specific tools and methods."]},
+{t:"gov",q:"How should a project manager align with the organisation's decision-making? [[4.3.2.5]]",
+ a:["Project success depends very much on the right decisions being made at the right level of the organisation at the right time.","Every decision should be prepared, presented, accepted, recorded, communicated and implemented.","Formal and informal routines and special rules exist for decision-making beyond the PM's authority and responsibility — the PM must identify these.","The PM should know the decision-making structure and processes and be able to structure and manage the project accordingly."]},
+{t:"gov",q:"Why is periodic reporting essential, and what must the PM consider? [[4.3.2.5]]",
+ a:["Periodic reporting of actual project status is essential for trust, governance, and to assure traceability of progress.","The PM must consider different stakeholders' reporting needs: information requirements, method of delivery, and reporting frequency.","The PM should apply the reporting standards of the parent organisation to the project, using specific tools and methods.","Communication in projects should be aligned with the needs of the permanent organisation."]},
+{t:"gov",q:"What forms of quality assurance might an organisation have, and why do they matter to the PM? [[4.3.2.5]]",
+ a:["Forms include system assurance, project assurance, finance assurance, technical assurance and security assurance.","The PM must consider these when developing the quality plan for the project.","The PM needs to know which members of the project team should be involved in project assurance activities.","The PM applies the organisation's way of quality assurance when setting up a reporting system within the permanent organisation."]},
+{t:"gov",q:"How should a project manager align the project with HR processes and functions? [[4.3.2.6]]",
+ a:["HR provides support in relation to team member contracts, temporary employment, training, salaries, incentives, stress, wellbeing, ethics and resources.","A well-established relationship with HR may increase influence on resource availability and quality in terms of adequate authorities.","The PM should use the HR function to acquire staff with the required authorities and deal with boundaries between the temporary organisation and the HR function.","The PM should use HR processes to provide training and individual development."]},
+{t:"gov",q:"How should a project manager align the project with finance and control? [[4.3.2.7]]",
+ a:["The finance and control function provides mandatory rules, procedures and guidelines that the PM needs to know and use.","It is a support function, providing advice on how to justify, manage and report on financial resources, and the PM needs to know various financial models for funding.","The PM should distinguish between the compulsory and optional utilities of the finance and control function.","The PM should monitor and control whether rules, guidelines and other financial utilities are used effectively and efficiently, and communicate and report the status and trends of financial tasks clearly and objectively."]},
+
+/* ---------------- 4.3.4 POWER AND INTEREST ---------------- */
+{t:"power",q:"What is the purpose of the Power and interest competence element?",
+ a:["It describes how the PM should recognise and understand informal interests, the resulting politics and use of power.","It defines how project managers and their teams should recognise how informal influences impact the project — these differ from formal interests derived from organisational strategy, standards and regulations.","The purpose is to enable the PM to use power and interest techniques to achieve stakeholder satisfaction and deliver project outcomes."]},
+{t:"power",q:"Name the three KCIs of Power and interest.",
+ a:["[[4.3.4.1]] Assess the personal ambitions and interests of others and the potential impact on the project","[[4.3.4.2]] Assess the informal influence of individuals and groups and the potential impact on the project","[[4.3.4.3]] Assess the personalities and working styles of others and employ them to the benefit of the project"]},
+{t:"power",q:"Define power, and explain what informal power is.",
+ a:["Power is the ability to influence the behaviour of others.","A substantial part of influence comes from informal power — that part of power which is not 'solidified' into formal roles, structures or processes.","Informal power is often motivated by personal ambitions and interests.","Understanding and being able to influence these informal personal interests and the resulting politics is essential to ensure project success."]},
+{t:"power",q:"Define interest in the context of this competence element.",
+ a:["Interest is an attraction to a specific topic or desired outcome.","People often try to realise their interests by exercising their influence.","Interest can be pursued through formal and informal relationships, which may result in group influence; groups may be informal or formal.","In formal groups, care should be taken to distinguish the formal role or power from informal influence, which may come from other power sources such as referent or expert power."]},
+{t:"power",q:"Describe French and Raven's formal (positional) bases of power.",
+ a:["Formal or positional powers correlate to the position that someone holds in an organisation.","Coercive — power based on the ability to punish or impose sanctions.","Reward — power based on the ability to give benefits or incentives.","Legitimate — power that comes from a formal position, role or title."]},
+{t:"power",q:"Describe French and Raven's informal (personal) bases of power.",
+ a:["Informal or personal powers are earned through individual characteristics rather than position.","Informational — power from access to, or control of, valued information.","Expert — power from knowledge, skill or expertise.","Referent — power from being liked, trusted or respected by others.","Effective leaders often use a combination of bases, favouring personal power over formal power to build trust."]},
+{t:"power",q:"How should a project manager assess the personal ambitions and interests of others? [[4.3.4.1]]",
+ a:["People have goals, ambitions and interests which influence their approach to the project and its success.","Sometimes ambitions and interests will align with working roles and duties, but sometimes they will not.","Performance and personal development reviews help understand individual motivations; interviews and 360-degree questionnaires are also useful.","The PM should acknowledge and assess the personal ambitions and interests of stakeholders and the team, and the differences between personal and organisational interests and goals."]},
+{t:"power",q:"How should a project manager assess informal influence? [[4.3.4.2]]",
+ a:["Informal influence must be distinguished from the formal influences set out in organisational documents and processes; French and Raven's bases of power provide a useful model for making that distinction.","People may have influence for many reasons and by many means — influencing decisions through personal relationships is a common and often effective way.","Every person or group has its own sphere of influence, which is important to understand.","The PM should acknowledge and estimate the influence, power and reach of stakeholders, and discern group spheres of influence in relation to the project."]},
+{t:"power",q:"Describe the power/interest grid and how it is used.",
+ a:["It maps stakeholders against two axes — their level of power and their level of interest in the project.","This produces four groups, each needing a different engagement strategy: high power/high interest = manage closely; high power/low interest = keep satisfied.","Low power/high interest = keep informed; low power/low interest = monitor with minimal effort.","It helps the PM prioritise engagement so effort goes where influence most affects project success."]},
+{t:"power",q:"How should a project manager assess personalities and working styles? [[4.3.4.3]]",
+ a:["Everybody is unique and will act and operate in their own behavioural style; style is also influenced by cultural factors.","Different people may have the same ambitions and/or interests but use a different style in using their influence; others may display the same style but differ in ambitions.","The PM must acknowledge the differences while working with individuals and groups efficiently and effectively.","The PM should identify and acknowledge the differences between behavioural style and personality, and between cultural aspects and personality."]},
+{t:"power",q:"Explain the difference between personality and behaviour.",
+ a:["Personality is less likely to change, but it does influence behaviour.","According to Myers-Briggs, personality type preferences are innate, inborn predispositions that develop over our lifespan.","Although similar characteristics appear in people of the same type, there are also differences, as we can choose how we behave.","Our natural preferences are our 'strengths'; using opposite preferences is a 'stretch' — we can learn to use them, but they will likely never feel easy or natural."]},
+{t:"power",q:"What are the four MBTI preference pairs, and how does MBTI help a project team?",
+ a:["Where you get your energy from (Extraversion / Introversion); what information you prefer to use (Sensing / iNtuition).","What process you use to make decisions (Thinking / Feeling); how you deal with the world around you (Judging / Perceiving) — combining into 16 types.","MBTI helps teams be aware of different personality preferences, tailor communications to suit them, and consider how data is presented to satisfy different types.","It helps engage and get the best from a variety of people. Other assessments exist — MBTI is just one example; the outcome is always to support understanding of personality types in the team."]},
+
+/* ---------------- 4.3.5 CULTURE AND VALUES ---------------- */
+{t:"culture",q:"What is the purpose of the Culture and values competence element?",
+ a:["It describes how the PM should recognise and understand both the internal organisational and the external societal culture and values.","Culture may be defined as a shared set of values, beliefs and behaviours that shape a community. Values may be defined as the set of concepts on which individuals in the community base their actions, such as codes of ethics.","Many organisations describe their corporate values explicitly in their strategy.","The purpose is to enable the PM to recognise and integrate the influence of internal and external cultural aspects on the project."]},
+{t:"culture",q:"Name the three KCIs of Culture and values.",
+ a:["[[4.3.5.1]] Assess the culture and values of the society and their implications for the project","[[4.3.5.2]] Align the project with the formal culture and corporate values of the organisation","[[4.3.5.3]] Assess the informal culture and values of the organisation and their implications for the project"]},
+{t:"culture",q:"Why must a project align its internal culture with external cultures?",
+ a:["Organisations are social systems where personal behaviour is embedded in a culture, with formal explicit aspects (mission, corporate values) and informal implicit aspects (beliefs, common practices).","Every organisation operates in a society, which also has a specific culture; all these aspects affect how people interact.","Projects are temporary organisations which need their internal culture aligned with external cultures, and in a multi-cultural project the PM may need to navigate multiple cultural and value norms.","Before starting, the PM needs to understand the culture(s) within the internal and external context, using research, standards, regulations or guidelines — and lessons learned can improve culture alignment on future projects."]},
+{t:"culture",q:"How should a project manager assess the culture and values of society? [[4.3.5.1]]",
+ a:["All projects are embedded in a society (sometimes more than one), whose values and unwritten rules deeply influence factors such as communication, working hours and information sharing.","The PM needs a working knowledge of the cultural basis, values and norms of the society or societies in which the project is based.","The PM should determine the implications of these cultural aspects for the project, take them into account in the project approach, and periodically review them.","The PM should work according to prevailing culture but maintain personal values."]},
+{t:"culture",q:"What is the Seven Dimensions of Culture model used for?",
+ a:["It helps us to understand a culture by categorising cultural aspects.","It is based on preferences, allowing cultures to be compared along defined dimensions.","It gives the PM a structured way to assess the implications of societal culture for the project approach."]},
+{t:"culture",q:"How should a project manager align with the formal culture and corporate values? [[4.3.5.2]]",
+ a:["Organisational values are typically documented in the company mission statement and policies such as quality, environmental, and health and safety.","The PM should acknowledge and respect the organisation's formal norms and demands, and know and apply its corporate values, mission and quality policy.","Corporate Social Responsibility (CSR) is a lever of control in complying with legal and non-governmental regulations, professional standards, ethical and international norms.","Through CSR an organisation encourages a positive impact on the environment, communities, stakeholders and wider society — the PM ensures the project supports the sustainable development of the organisation, including CSR."]},
+{t:"culture",q:"How should a project manager assess the informal culture of an organisation? [[4.3.5.3]]",
+ a:["Many informal aspects influence organisational culture, including architecture, furniture, dress codes and office jokes.","Assumptions are deeply embedded, usually unconscious behaviours resulting from the history and cultural background of the organisation.","The informal culture is shaped by history, behaviours and surface artefacts — understanding these enables the PM to adapt to 'how things are really done'.","The PM should acknowledge, analyse and respect informal culture and values, and identify their implications for the project, adapting the approach accordingly."]},
+
+/* ---------------- 4.4.4 RELATIONSHIPS AND ENGAGEMENT ---------------- */
+{t:"rel",q:"What is the purpose of the Relationships and engagement competence element?",
+ a:["Personal relationships build the foundation for project performance — this includes one-to-one relationships as well as networks, and it is worth investing time and attention to establish durable, robust relationships.","The ability to form strong relationships is primarily driven by social competences such as empathy, trust, confidence and communication skills.","Sharing visions and goals drives others to engage in tasks and commit to common goals.","The purpose is to enable the PM to establish relationships, understanding that the ability to engage with others supports collaboration, commitment and ultimately performance."]},
+{t:"rel",q:"Name the five KCIs of Relationships and engagement.",
+ a:["[[4.4.4.1]] Initiate and develop personal and professional relationships","[[4.4.4.2]] Build, facilitate and contribute to social networks","[[4.4.4.3]] Demonstrate empathy through listening, understanding and support","[[4.4.4.4]] Show confidence and respect by encouraging others to share opinions or concerns","[[4.4.4.5]] Share own vision and goals in order to gain the engagement and commitment of others"]},
+{t:"rel",q:"How should a project manager initiate and develop personal and professional relationships? [[4.4.4.1]]",
+ a:["Relationships are initiated by a genuine interest in people; the PM should demonstrate interest and be ready to engage with them.","The PM should utilise possibilities and situations to create and maintain personal and professional contacts.","The PM should be present, available, open for dialogue, actively staying in contact, and visible and accessible for team members, clients, customers and stakeholders.","The PM should act attentively, acknowledge others, and keep stakeholders informed. Cultural differences are interesting but may increase the chance of damaging misunderstandings."]},
+{t:"rel",q:"How should a project manager build and contribute to social networks? [[4.4.4.2]]",
+ a:["Join and contribute to social networks, rather than relying only on the formal project structure.","Create and facilitate social networks around the project.","Organise events for networking.","Facilitate support for networking, so the team and stakeholders can connect and share."]},
+{t:"rel",q:"How does a project manager demonstrate empathy? [[4.4.4.3]]",
+ a:["Demonstrating empathy means showing real interest and involvement with others and their wellbeing.","Listen attentively and actively; make others feel heard, and ask questions for clarification or detail.","Recognise the emotions expressed or experienced by others and relate and react to these in a sympathetic or compassionate way.","Familiarise yourself with the values and standards of others, relate to people's problems, offer support even when it is not asked for, and respond to communication promptly."]},
+{t:"rel",q:"How does a project manager show confidence and respect? [[4.4.4.4]]",
+ a:["Having confidence in someone means believing in them and their positive intentions; do not have a hidden agenda, and share information with others. Accept that showing confidence is an investment with an insecure outcome.","Take other people's talents and opinions seriously — it is crucial to understand the motivation of team members to get optimal performance.","Act respectfully, treating others as you would like to be treated; take people seriously regardless of gender, race, social status or background, and respect cultural diversity. Codes of conduct are guidelines for decisions and behaviour.","In practice: rely on someone's word, assign tasks with confidence, expect others to act according to common values and agreements, and delegate work without monitoring every small stage."]},
+{t:"rel",q:"How should a project manager share their vision and goals to gain engagement? [[4.4.4.5]]",
+ a:["Sharing a vision and goals requires a positive and enthusiastic attitude while showing realistic optimism.","To inspire others requires self-commitment together with an ambitious yet clear vision, realistic objectives, and the ability to get commitment from others.","The vision can be explicit (even written down) or implicit, and serves as a motivator making people feel personally responsible for a good outcome.","The PM should clearly communicate vision, goals and outcomes; invite debate and critique; involve people in planning and decision-making; ask for commitment on specific tasks; and take individual contributions seriously. Sharing information enhances commitment — but beware information overload."]},
+
+/* ---------------- 4.4.5 LEADERSHIP ---------------- */
+{t:"lead",q:"What is the purpose of the Leadership competence element?",
+ a:["Leadership means providing direction and guidance to individuals and groups, and involves the ability to choose and apply appropriate styles of management in different situations.","Besides displaying leadership with their team, the PM needs to be seen as a leader in representing the project to senior management and other interested parties.","The purpose is to enable the PM to lead, provide direction and motivate others to support and enhance individual and team performance."]},
+{t:"lead",q:"Name the five KCIs of Leadership.",
+ a:["[[4.4.5.1]] Initiate actions and proactively offer help and advice","[[4.4.5.2]] Take ownership and show commitment","[[4.4.5.3]] Provide direction, coaching and mentoring to guide and improve the work of individuals and teams","[[4.4.5.4]] Exert appropriate power and influence over others to achieve the goals","[[4.4.5.5]] Make, enforce and review decisions"]},
+{t:"lead",q:"What do leadership styles include, and when is leadership most important?",
+ a:["A PM should be aware of different leadership styles and decide which is appropriate for their personality, the project, the team and other stakeholders.","Leadership styles include patterns of behaviour, communication, methods, attitudes towards conflicts, decision-making processes and delegation.","Leadership is important throughout the full lifecycle of the project, especially when change is required or when there is uncertainty about a course of action."]},
+{t:"lead",q:"Explain situational leadership and its key principles.",
+ a:["There isn't one 'best' way to lead — the right style depends on the people you're leading and the situation.","Assess how much direction they need, and how much support and encouragement they need, then adjust your style accordingly.","Key principles: change your style as people develop; don't delegate to someone who is brand new; don't micromanage someone who is experienced.","Good leaders are flexible, not stuck in one approach — situational leadership underpins the IPMA Leadership competence element."]},
+{t:"lead",q:"How should a project manager initiate actions and offer help and advice? [[4.4.5.1]]",
+ a:["Taking the initiative means having the tendency and ability to start an unrequested action — generating solutions, taking the lead, helping without first being asked.","It requires the ability to think ahead about possible situations and possible solutions.","Taking the initiative adds to one's influence and heightens visibility; but if the initiative is unwelcome or delivers poor results, there is a risk of losing status.","Every initiative should involve a careful assessment of pros and cons — the PM must balance initiative and risk, and think and act one step ahead."]},
+{t:"lead",q:"How does a project manager take ownership and show commitment? [[4.4.5.2]]",
+ a:["Taking ownership means demonstrating personal buy-in and commitment to the project by taking full responsibility and acting as an entrepreneur.","The PM monitors processes and results to identify where intervention or improvement is required and if there are opportunities for learning.","The PM should demonstrate ownership and commitment in behaviour, speech and attitudes; talk about the project in positive terms; and rally and generate enthusiasm for it.","The PM should set up measures and performance indicators, look for ways to improve project processes, and drive learning."]},
+{t:"lead",q:"How should a project manager provide direction, coaching and mentoring? [[4.4.5.3]]",
+ a:["The PM should give guidance and support to the team and establish conditions that engage them with their work.","Coaching and mentoring focus on improving the abilities and self-reliance of the team; direction is guiding them in their activities.","The PM creates and communicates personal and common objectives, creates and shares a vision for the project, and needs to keep a cool head in demanding situations.","The PM must assess when direction, coaching or mentoring are needed, and sometimes stand back to promote the self-reliance or creativity of teams or individuals."]},
+{t:"lead",q:"What is the GROW coaching framework?",
+ a:["A framework that helps coach someone from identifying a goal through to committing to concrete action.","G — Goal: what the person wants to achieve. R — Reality: the current situation.","O — Options: the possible ways forward. W — Will: what they commit to doing.","It gives structure to a coaching conversation, supporting the direction, coaching and mentoring KCI."]},
+{t:"lead",q:"How should a project manager exert power and influence? [[4.4.5.4]]",
+ a:["This means being visible as a leader and creating the possibility for others to follow, requiring an understanding of the demands of the team and stakeholders.","To exert influence also means directing other people's actions, even if you are not in command — a leader shapes views, creates perceptions of situations, and relationships.","Sometimes power is necessary to realise results, but often a simple conversation may be more effective; the open use of power may create resentment, so use it carefully.","Power and influence are tightly linked to communication and using the most effective channels. The PM should demonstrate timely use of influence and/or power and be perceived by stakeholders as the leader of the project or team."]},
+{t:"lead",q:"How should a project manager make, enforce and review decisions? [[4.4.5.5]]",
+ a:["Making decisions means selecting a course of action from several alternatives, choosing the one most consistent and aligned with the objectives.","Decisions should be taken based on analysis of the facts, incorporating the views and opinions of others; sometimes decisions are made with incomplete or contradictory information and may be based on intuition.","Reviewing and being prepared to change prior decisions based on new information is an essential part of the ability to take decisions.","Decisions are often made by others (line managers, steering committees) — the PM exerts influence so those others take the right decisions at the right time, by offering analyses and interpretations, explaining the rationale, and communicating the decision and intent clearly."]},
+
+/* ---------------- 4.4.6 TEAMWORK ---------------- */
+{t:"team",q:"What is the purpose of the Teamwork competence element?",
+ a:["Teamwork is about bringing people together to realise a common objective; teams are groups of people working together to realise specific objectives, and project teams are commonly multi-disciplinary.","Teamwork is about building a productive team by forming, supporting and leading the team.","Team communication and team relationships are among the most important aspects of successful teamwork.","The purpose is to enable the PM to select the right team members, promote a team orientation and effectively manage the team."]},
+{t:"team",q:"Name the five KCIs of Teamwork.",
+ a:["[[4.4.6.1]] Select and build the team","[[4.4.6.2]] Promote cooperation and networking between team members","[[4.4.6.3]] Support, facilitate and review the development of the team and its members","[[4.4.6.4]] Empower teams by delegating tasks and responsibilities","[[4.4.6.5]] Recognise errors to facilitate learning from mistakes"]},
+{t:"team",q:"What does teamwork cover across the team lifecycle?",
+ a:["It covers the complete lifecycle of the team, starting with selecting the right team members and then building, supporting and steering the team.","As the team matures, they can work more independently and be given more responsibility.","Team building is promoted through meetings, workshops and seminars; team spirit can be achieved through motivation, goal setting, social events and supporting strategies.","Personal involvement, communication, relationship building and networking should be encouraged to promote a productive work environment."]},
+{t:"team",q:"Describe the Tuckman model of team development.",
+ a:["Forming — the team comes together and begins to build an understanding of itself as a team.","Storming — differences and conflict surface as members test roles and ways of working. Conflict at this stage is not a failure but a necessary step to high performance.","Norming — the team agrees norms and rules, and cooperation improves. Performing — the team works effectively toward shared goals.","Teams don't always move in a straight line: stress or new members can send a team back to Storming. The PM varies their leadership style as the team matures."]},
+{t:"team",q:"How should a project manager select and build the team? [[4.4.6.1]]",
+ a:["Team members should have the necessary knowledge, skills and 'chemistry' to be able to work together; the PM should consider individual competences, strengths, weaknesses and motivation when deciding on inclusion, roles and tasks.","Clarify objectives and create a common vision; set the team objectives, agenda and completion criteria.","Negotiate common team norms and rules; motivate individuals and build team awareness.","The PM needs to translate individual motivation into team performance. Team building is continuous throughout the project, and leadership style varies with team development."]},
+{t:"team",q:"What did Belbin's research conclude, and why does it matter for teamwork?",
+ a:["Belbin's research programme sought to understand why some teams performed better than others.","It concluded that specific behaviour traits were required in every team to support successful delivery, and that team diversity was a real advantage.","Understanding strengths and weaknesses makes people more engaged, happier and more productive at work — this underpins the Teamwork competence element.","No one can be expected to be strong in all roles, and most people have more than a single team role strength; a team of four or five people can reflect all the roles and work well together."]},
+{t:"team",q:"Describe the Belbin roles: Plant, Monitor Evaluator, Co-ordinator and Implementer.",
+ a:["Plant — creative innovators and inventors who generate ideas; independent, clever and original. May prefer to work independently, ideas may be radical and lack practical constraint, and they react strongly to criticism and praise.","Monitor Evaluator — serious-minded, prudent, immune from over-enthusiasm; high critical thinking ability, slow to decide, preferring to think things over, with a capacity for shrewd judgements.","Co-ordinator — excels at motivating the team toward shared goals; mature, trusting, confident, delegates readily, quick to spot individual talents and use them, with a broad outlook that commands respect.","Implementer — practical common sense, self-control and discipline; favours hard work and tackles problems systematically, but may lack spontaneity; loyalty lies with the organisation."]},
+{t:"team",q:"Describe the Belbin roles: Completer Finisher, Resource Investigator, Shaper, Team Worker and Specialist.",
+ a:["Completer Finisher — unlikely to start anything they cannot finish; motivated by internal anxiety though outwardly unruffled; may be introverted, intolerant of a casual attitude, and reluctant to delegate.","Resource Investigator — enthusiastic, quick-off-the-mark extroverts, good at communicating and popular; think on their feet, probe others for information, and readily see possibilities in anything new.","Shaper — highly motivated, energetic people who like to win; extroverts who lead and challenge others; may have less empathy and react emotionally to frustration, but are probably best at creating positive action.","Team Worker — the most supportive members; sociable, concerned about others, dislike friction, flexible and good listeners, but may be indecisive. Specialist — dedicated individuals who pride themselves on technical skills and specialised knowledge, but may lack interest outside their own field."]},
+{t:"team",q:"How should a project manager promote cooperation and networking? [[4.4.6.2]]",
+ a:["Stimulating cooperation means actively influencing team members to work together and contribute to the project; the team benefits from sharing experience, knowledge, opinions, ideas and concerns.","Discussions and disagreements are an unavoidable consequence, but the PM should maintain a productive and respectful atmosphere. If a team member sets out to disrupt cooperation, the PM must act by correcting or replacing them.","The PM should create opportunities for discussion, ask for opinions, suggestions and concerns to improve performance, and share successes with the team.","The PM should promote cooperation with people both within and outside the team, use tools for collaboration, and stimulate networking through physical and virtual activities."]},
+{t:"team",q:"How should a project manager support team development? [[4.4.6.3]]",
+ a:["Team development involves continuously developing the team, encouraging members to gain new knowledge and skills; the PM's role is to support, enable and review these learning efforts.","The PM should create opportunities to share knowledge between team members, other teams and the organisation outside the project.","Promote continuous learning and knowledge sharing; use techniques such as on-the-job training; provide opportunities for seminars and workshops (on- and off-the-job).","Plan and promote 'lessons learned' sessions, and provide time and opportunity for self-development. Development is also supported by understanding preferred team roles using an approach such as Belbin."]},
+{t:"team",q:"How does a project manager empower teams? [[4.4.6.4]]",
+ a:["Responsibility creates involvement — the PM increases involvement and individual and collective empowerment by delegating tasks and problems to teams or team members.","Depending on their task maturity, delegated tasks can be big, challenging and important for team members.","The output from delegated tasks should be measured, with feedback cycles for the team to ensure learning occurs.","The PM should have clear performance criteria, provide reporting structures at team level, and provide feedback sessions."]},
+{t:"team",q:"How should a project manager facilitate learning from mistakes? [[4.4.6.5]]",
+ a:["The PM makes sure the effect of errors and mistakes is kept to a minimum, while accepting that mistakes happen and people make errors.","The PM analyses and facilitates learning from mistakes, so errors are used as a platform for change and improvement, reducing the chance of future errors.","The PM and team seek root causes for mistakes and take effective action to ensure the same mistakes do not occur again.","The PM should avoid negative effects of errors on project success, be tolerant, analyse and discuss mistakes to determine improvements, and help team members learn from them."]},
+
+/* ---------------- 4.4.7 CONFLICT AND CRISIS ---------------- */
+{t:"conflict",q:"What is the purpose of the Conflict and crisis competence element?",
+ a:["It includes moderating or solving conflicts and crises by being observant of the environment and noticing and delivering a remedy for disagreements.","Conflicts and crises may include events and situations, character conflicts, stress levels and other potential dangers.","The PM must handle these scenarios appropriately and stimulate a learning process for future conflicts and crises.","The purpose is to enable the PM to take effective action when a crisis or a clash of opposing interests / incompatible personalities occurs."]},
+{t:"conflict",q:"Name the four KCIs of Conflict and crisis.",
+ a:["[[4.4.7.1]] Anticipate and possibly prevent conflicts and crises","[[4.4.7.2]] Analyse the causes and consequences of conflicts and crises and select appropriate response(s)","[[4.4.7.3]] Mediate and resolve conflicts and crises and/or their impact","[[4.4.7.4]] Identify and share learning from conflicts and crises to improve future practice"]},
+{t:"conflict",q:"Distinguish a conflict from a crisis.",
+ a:["Conflicts may occur between two or more people and/or parties, and can negatively impact the working environment.","A crisis may be the escalation of a conflict, or the result of a sudden, abrupt or decisive change in a situation that threatens the realisation of the project goals.","A crisis requires a rapid response — the PM should assess the crisis, define scenarios to secure the project, and decide on the escalation levels needed.","Identifying and reacting to either requires an understanding of collaboration, compromise, prevention, persuasion, escalation or the use of power. Some conflicts may only be solved by independent mediation."]},
+{t:"conflict",q:"How should a project manager anticipate and prevent conflict? [[4.4.7.1]]",
+ a:["The PM should be aware of potential conflicts and crises by anticipating possible areas of disagreement and preventing them before they become issues.","This includes pre-empting conflict areas, keeping those with conflicting characters or interests in separate tasks/teams, and delegating conflict-sensitive items to specific people.","The PM should act to reduce stress levels, as stress is a factor in potential conflicts — people may become more sensitive under pressure.","In practice: analyse potentially stressful situations, implement preventive measures, take stress-reducing measures, and reflect on stressful situations in a team."]},
+{t:"conflict",q:"How should a project manager analyse and respond to conflicts and crises? [[4.4.7.2]]",
+ a:["A crisis is considered an escalated level of conflict, and can arise for many reasons, often outside the PM's control.","The art of conflict and crisis management is to assess the causes and consequences; the PM should obtain additional information to make decisions about solutions.","The PM should assess the conflict stage, analyse the causes of the conflict or crisis, and analyse its potential impact.","The PM should have different conflict or crisis approaches available to choose from."]},
+{t:"conflict",q:"Describe the Thomas–Kilmann conflict model.",
+ a:["It plots conflict-handling modes against two axes: assertiveness (pursuing your own concerns) and cooperativeness (satisfying others' concerns).","Competing — assertive and uncooperative. Accommodating — unassertive and cooperative.","Avoiding — unassertive and uncooperative. Collaborating — both assertive and cooperative, seeking a solution that satisfies all.","Compromising — intermediate on both, each side giving something. The PM selects the mode that suits the situation."]},
+{t:"conflict",q:"How should a project manager mediate and resolve conflicts and crises? [[4.4.7.3]]",
+ a:["Based on the analysis, the PM should gather the information, weigh the options, aim for a positive solution, and stay calm and in control — relaxation and balanced judgment are important qualities, and the ability to act decisively is most important in a crisis.","Resolving conflicts involves collaboration, compromise, prevention or use of power, each depending on achieving a balance between one's own and others' interests.","The PM should address issues openly and create an atmosphere of constructive debate.","The PM should select and use the right method to solve the conflict or crisis, and take disciplinary or legal measures when appropriate."]},
+{t:"conflict",q:"How should a project manager learn from conflicts and crises? [[4.4.7.4]]",
+ a:["When a conflict has been resolved, the PM needs to restore harmony and equilibrium.","The PM should stimulate learning by determining the root causes of the conflict; root causes can be split into environmental and project events.","The team should learn from the conflict or crisis to help them avoid or cope with similar situations in future.","The PM should restore the team environment, motivate the team to acknowledge and learn from their own part in the conflict, and use conflicts positively to strengthen team cohesion and solidity."]},
+
+/* ---------------- 4.4.8 RESOURCEFULNESS ---------------- */
+{t:"resourceful",q:"What is the purpose of the Resourcefulness competence element?",
+ a:["It is the ability to apply various techniques and ways of thinking to defining, analysing, prioritising, finding alternatives for, and dealing with or solving challenges and problems.","It often requires thinking and acting in original and imaginative ways and stimulating the creativity of stakeholders and the team; it is useful when risks, opportunities, problems and difficult situations arise.","The purpose is to effectively handle uncertainty, problems, changes, limitations and stressful situations by continuously searching for new, better and more effective approaches and/or solutions."]},
+{t:"resourceful",q:"Name the five KCIs of Resourcefulness.",
+ a:["[[4.4.8.1]] Stimulate and support an open and creative environment","[[4.4.8.2]] Apply conceptual thinking to define situations and strategies","[[4.4.8.3]] Apply analytic techniques to analysing situations, financial and organisational data and trends","[[4.4.8.4]] Promote and apply creative techniques to find alternatives and solutions","[[4.4.8.5]] Promote a holistic view of the project and its context to improve decision-making"]},
+{t:"resourceful",q:"What is resourcefulness about in practice?",
+ a:["It is about making optimal use of people to create something new, or make things better, faster or cheaper.","The PM fosters resourcefulness within the team to stimulate, evaluate and act upon ideas that can benefit the project.","A team open to creativity and innovation embraces change, but creativity should be focused on delivering results.","Resourcefulness helps overcome problems and motivates the team to work together to develop workable solutions; conceptual and analytic techniques support information management, presenting and reporting results."]},
+{t:"resourceful",q:"How should a project manager stimulate an open and creative environment? [[4.4.8.1]]",
+ a:["A creative environment encourages people to share knowledge, ideas and opinions.","To stimulate creativity and innovation, the PM needs to be open to original and imaginative ways to overcome obstacles.","The PM should encourage others to express their input, suggestions, ideas and concerns — an open environment gets the most from team members' expertise in different areas.","Mutual respect, trust and reliability all stimulate creativity. The PM should seek input, consider the perspectives of others, and consider and/or adopt their ideas."]},
+{t:"resourceful",q:"How should a project manager apply conceptual thinking? [[4.4.8.2]]",
+ a:["Because every project is unique, the capabilities of abstraction and conceptualisation are needed.","It refers to breaking down the subject in question into smaller parts and integrating these into new and useable ideas; the PM would typically involve the team.","Conceptual thinking also means considering multiple causes that relate to each other within a general context, and concluding that different ways of solving problems will have different consequences.","The PM should know that problems often have multiple causes and solutions often have multiple effects, and should apply systemic thinking."]},
+{t:"resourceful",q:"How should a project manager apply analytical techniques? [[4.4.8.3]]",
+ a:["The PM should be able to analyse complex situations or problems and find solutions and alternatives.","The PM also needs to analyse and derive information and trends from data, and present or report the findings clearly.","Analytical dexterity means using the different methods available for detecting a problem's actual causes and recommending a solution.","The PM should apply various analytic techniques, analyse complex sets of data and extract relevant information, and clearly report and present data conclusions, summaries and trends."]},
+{t:"resourceful",q:"Explain diverging and converging creative techniques. [[4.4.8.4]]",
+ a:["Creative techniques can be used to identify solutions and are split into diverging and converging approaches. Firstly, the problem or opportunity is defined.","Diverging is used to gather possible solutions, including techniques such as brainstorming, mind mapping, storyboarding and visualising — taking multiple perspectives into account helps explore alternatives.","Converging analyses possible solutions and their effects, including techniques such as weighted selection and force-field analysis.","Finally, the best option is chosen. The PM should engage multiple views and skills and identify interdependencies."]},
+{t:"resourceful",q:"How should a project manager promote a holistic view? [[4.4.8.5]]",
+ a:["The PM should keep the bigger picture of the project in mind when improving decision-making, including the goals and the wider context of the project in relation to strategies and portfolios.","The PM uses multiple perspectives to judge and deal with situations, separating the detail from the bigger picture.","The PM should make or promote decisions based on a deep understanding of the project and its context, and can explain the holistic view to others both inside and outside the project.","The PM should demonstrate holistic thinking, explain the bigger picture, and make connections between the project and the larger context, taking appropriate action."]},
+
+/* ---------------- 4.5.4 TIME ---------------- */
+{t:"time",q:"What is the purpose of the Time competence element?",
+ a:["Time competence is the ability to plan, develop, manage and control schedules so that project objectives are achieved within agreed timeframes.","It is not just making a Gantt chart — it includes thinking in time, sequencing work, managing delays and forecasting delivery.","Time includes the identification and structuring of all project components to optimise execution.","The purpose is to enable the PM to define, sequence, optimise, monitor and control the project to deliver the agreed outcomes."]},
+{t:"time",q:"Name the five KCIs of Time.",
+ a:["[[4.5.4.1]] Establish the activities required to deliver the project","[[4.5.4.2]] Determine the work effort and duration of activities","[[4.5.4.3]] Decide on schedule and stage approach","[[4.5.4.4]] Sequence project activities and create a schedule","[[4.5.4.5]] Monitor progress against the schedule and make necessary adjustments"]},
+{t:"time",q:"Explain the difference between a deliverable, a WBS, a work package and an activity.",
+ a:["A deliverable is a tangible or intangible product produced by the project (e.g. a new office; a trained user), intended to be delivered to an internal or external customer.","A WBS is a systematic division of the entire project content into sub-tasks and work elements, showing a hierarchical breakdown of the work to be performed to produce the deliverables.","A work package is a group of tasks defined at the same level in the WBS, including the work to be performed, work objectives, costs, resources needed and duration — with well-defined boundaries.","An activity is extracted from a WBS work package and is the building block used in the network diagram and schedule."]},
+{t:"time",q:"How does a project manager determine the work effort and duration of activities? [[4.5.4.2]]",
+ a:["For each activity, the work effort and duration must be determined.","For each activity, calculate what resources and resource competences are required, and how many.","When multiple resources are available, a balance must be found between quality, cost and speed of delivery, depending on the project success criteria and requirements.","The PM should identify types of resources that may be required to perform an activity, and identify and decide between various resource options."]},
+{t:"time",q:"Describe the commonly used estimating techniques.",
+ a:["An estimate is a forecast of the probable time or cost of completing work — a quantified assessment of the resources required, normally applied to project costs, resources and durations.","Analogous — compares the activity to a similar past project; fast but less accurate.","Parametric — uses a statistical/mathematical relationship between historical data and other variables to calculate the estimate.","Analytical (bottom-up) — breaks work into smaller pieces, estimates each individually, then aggregates; slower but more accurate."]},
+{t:"time",q:"Explain three-point (PERT) estimating.",
+ a:["A quantitative analysis technique that assigns numerical values to define a range of possible out-turns.","It uses three estimates — optimistic, most likely and pessimistic — to calculate the expected duration, with the most likely estimate having the most weight.","It is a statistical approach that assumes a specific probability level for each estimate.","The PERT formula helps estimate project time more accurately by considering best case, most-likely case and worst-case scenarios."]},
+{t:"time",q:"How does a project manager decide on the schedule and stage approach? [[4.5.4.3]]",
+ a:["Depending on the chosen approach (e.g. waterfall or iterative planning), the PM decides the number, content, length and deliverables of the stages or phases.","The selection depends on the project success criteria, requirements, guidelines in the organisation, other contextual factors and uncertainty — for instance, higher uncertainties may lead to shorter phases.","Some schedules are divided into time boxes containing detailed activities, where the plan focuses on the number of iterations.","The PM should know different planning techniques, choose the appropriate ones, determine appropriate stages, and know the effects of uncertainty on planning and how to minimise them."]},
+{t:"time",q:"Explain how the critical path is calculated (forward pass, backward pass, float). [[4.5.4.4]]",
+ a:["Forward pass (left→right): set Early Start (ES); Early Finish EF = ES + Duration; the EF becomes the next activity's ES, taking the highest value where paths merge.","Backward pass (right→left): Late Finish (LF) of the final activity = its EF; Late Start LS = LF − Duration, taking the lowest value where paths branch.","Total Float = LF − EF — how much an activity can slip without delaying project end. The critical path is the sequence of zero-float activities, the longest path through the network, and determines the project duration.","The critical path may be influenced by the availability of resources; levelling can optimise resource assignment in the plan and may influence the critical path."]},
+{t:"time",q:"How does a project manager monitor progress against the schedule? [[4.5.4.5]]",
+ a:["Control systems such as time-booking systems and progress meetings should be in place as soon as planning is completed.","Methods such as earned value analysis can measure realised progress versus baseline.","A plan may need adjusting if there are disruptions — from changes in deliverables or requirements, scarcity of resources or money, or late or off-spec deliveries.","Periodically the schedule should be compared against the baseline and, if necessary, adjustments made."]},
+{t:"time",q:"Why might a project manager introduce a time buffer or float into a schedule?",
+ a:["Where there is uncertainty about the timeframe, a time 'buffer' or 'float' should be introduced into the schedule.","It absorbs variability without threatening the overall project deadline.","It is a key risk-mitigation measure in scheduling."]},
+
+/* ---------------- 4.5.5 ORGANISATION AND INFORMATION ---------------- */
+{t:"orginfo",q:"What is the purpose of the Organisation and Information competence element?",
+ a:["It enables the PM to create a high-performing temporary organisation by defining, implementing and managing the project structure — roles, responsibilities and effective internal/external information flows.","It links organisational structure with communication processes."]},
+{t:"orginfo",q:"Name the four KCIs of Organisation and Information.",
+ a:["[[4.5.5.1]] Assess and determine the needs of stakeholders relating to information and documentation","[[4.5.5.2]] Define the structure, roles and responsibilities within the project","[[4.5.5.3]] Establish infrastructure, processes and systems for information flow","[[4.5.5.4]] Implement, monitor and maintain the organisation of the project"]},
+{t:"orginfo",q:"How should a project manager assess stakeholder information needs? [[4.5.5.1]]",
+ a:["Determine each stakeholder's power, interest and decision-making authority, alongside their expectations for level of detail and frequency of information.","Care must be taken not to overwhelm stakeholders with unnecessary information — only the information needed, in a suitable form, should be provided.","A communication management plan is created to establish channels and modes, both formal and informal."]},
+{t:"orginfo",q:"Explain the OBS and the RAM, and how they relate. [[4.5.5.2]]",
+ a:["The Organisation Breakdown Structure (OBS) is a hierarchical breakdown of the management groups and resources involved in the project, resembling an organisation chart, showing the project organisation in enough detail for work to be allocated.","The Responsibility Assignment Matrix (RAM) is created by cross-referencing the PBS/WBS against the OBS, showing who is responsible for each element of work.","It is often coded using RACI — Responsible, Accountable, Consult, Inform.","It removes ambiguity over ownership, so no work is unassigned and no role duplicated."]},
+{t:"orginfo",q:"How does a project manager establish infrastructure for information flow? [[4.5.5.3]]",
+ a:["By defining roles, responsibilities, rules and guidelines for what information should be communicated and how.","By implementing appropriate systems and methods — e.g. document management systems, reporting tools.","A key success criterion is limiting and/or preventing redundant information, so that what is shared is clear, unambiguous and consistent."]},
+{t:"orginfo",q:"Why must the project organisation be monitored and adjusted over time? [[4.5.5.4]]",
+ a:["Any organisational structure is valid only for a limited period, as contextual factors such as strategy, or shifts in power and interest, change over the project lifecycle.","If the organisation no longer fits, roles, responsibilities and information flows become ineffective.","The PM must proactively monitor the environment and make necessary adjustments to keep the organisation fit for purpose."]},
+
+/* ---------------- 4.5.6 QUALITY ---------------- */
+{t:"quality",q:"Explain the two key drivers of quality in projects.",
+ a:["Quality of process — the way the project itself is organised, including developing, implementing and reviewing standards for how quality is addressed.","Quality of output/outcome — managing, assuring and controlling the quality of the product or service being delivered.","Quality encompasses the entire project lifecycle, not just the final deliverable."]},
+{t:"quality",q:"Name the five KCIs of Quality.",
+ a:["[[4.5.6.1]] Develop, monitor the implementation of, and revise a quality management plan","[[4.5.6.2]] Review the project and its deliverables against the quality management plan","[[4.5.6.3]] Verify achievement of quality objectives and recommend corrective/preventive actions","[[4.5.6.4]] Plan and organise the validation of project outcomes","[[4.5.6.5]] Ensure quality throughout the project"]},
+{t:"quality",q:"What should a quality management plan include? [[4.5.6.1]]",
+ a:["Agreed quality objectives with the sponsor and key stakeholders.","Defined indicators and quality target values.","The tools, procedures, techniques and resources needed to achieve quality.","The type of reviews, responsibilities, participants and a time schedule aligned to the overall project schedule, plus a mechanism for monitoring and assessing completion of the plan's tasks."]},
+{t:"quality",q:"Describe quality audits. [[4.5.6.2]]",
+ a:["A quality audit is performed by parties inside or outside the project — even customers — to determine the performance of the quality process and control.","It identifies the need for corrective and preventive actions.","Audits can also serve as a progress-reporting tool, giving stakeholders confidence in how quality is being managed."]},
+{t:"quality",q:"Distinguish verification from validation. [[4.5.6.3]] [[4.5.6.4]]",
+ a:["Verification is performed throughout the lifecycle (usually at the end of each phase) to test whether deliverables and processes meet defined quality requirements, detecting defects using established tools and techniques.","Validation aims to secure formal acceptance of the project by confirming the outcomes are of value to the stakeholders once deployed — it is performed by the receiving stakeholders, not the project team.","In short: verification asks 'did we build it right?'; validation asks 'did we build the right thing?'"]},
+{t:"quality",q:"What corrective/preventive actions might follow verification? [[4.5.6.3]]",
+ a:["Analysis of possible causes of defects.","Determination of appropriate corrective and preventive actions.","Formulation of recommended change requests, communicated to relevant project team members and escalated for decision where necessary."]},
+{t:"quality",q:"How does a project manager ensure quality throughout the project? [[4.5.6.5]]",
+ a:["The quality approach must be fit for purpose and adaptable, integrating and implementing quality standards across the participating organisations.","Once implemented, regular check-ups and improvements maintain fitness for purpose.","Quality awareness must be embedded so that everyone involved understands what level of quality is required and why."]},
+
+/* ---------------- 4.5.7 FINANCE ---------------- */
+{t:"finance",q:"Define funding, financing and cost management, and explain how Finance relates to all three.",
+ a:["Finance covers all activities for estimating, planning, gaining, spending and controlling financial resources — both inflow and outflow.","Cost management refers to outflow, usually managed against a budget.","Financing refers to inflow of funds from external sources to the organisation; funding refers to inflow of funds from within the organisation.","The purpose is to ensure enough financial resource is available at all times and that financial status is properly monitored and reported."]},
+{t:"finance",q:"Name the five KCIs of Finance.",
+ a:["[[4.5.7.1]] Estimate project costs","[[4.5.7.2]] Establish the project budget","[[4.5.7.3]] Secure project funding","[[4.5.7.4]] Develop, establish and maintain a financial management and reporting system","[[4.5.7.5]] Monitor project financials to identify and correct deviations"]},
+{t:"finance",q:"Explain the difference between the WBS and the CBS.",
+ a:["The WBS is deliverable-oriented, structuring the project by the products/outputs to be produced.","The Cost Breakdown Structure (CBS) is cost-category-oriented, distinguishing direct and indirect costs.","Costs are assigned to WBS work packages, and this alignment enables budgeting, cost tracking and Earned Value Management."]},
+{t:"finance",q:"Compare top-down, analogous and bottom-up cost estimating. [[4.5.7.1]]",
+ a:["Top-down — based on past similar projects, benchmarks or expert judgement; fast and useful early on, but less accurate and may miss hidden complexity.","Analogous — uses historical data from previous projects; faster than bottom-up and reasonably accurate if the data is a good match, though quality depends on documentation.","Bottom-up — uses the WBS to estimate cost for each activity individually (building a CBS); most accurate and detailed, but time-consuming and harder early in a project."]},
+{t:"finance",q:"Explain why a project manager should estimate the budget for a project. [[4.5.7.2]]",
+ a:["To test the viability of the project.","To establish if the project is affordable.","To ensure the project business case is complete.","To compare different delivery option costs — and to provide a baseline against which actual spend can be monitored."]},
+{t:"finance",q:"Why should a project budget include contingencies? [[4.5.7.2]]",
+ a:["Contingencies are held in reserve to fund uncertainties, risks, claims or cost overruns that could not be precisely predicted at the planning stage.","They protect the project's ability to absorb variance without requiring re-negotiation of the entire budget."]},
+{t:"finance",q:"What are the cost histogram and the S-curve used for? [[4.5.7.4]]",
+ a:["The cost histogram shows planned cost per time unit across the project duration (a stepped/stacked diagram).","The cumulative cost diagram (S-curve) shows the running total of costs over time.","The S-curve forms the basis for earned value analysis, cost monitoring and controlling cost development during execution."]},
+{t:"finance",q:"How does a project manager monitor financials and respond to cost breaches? [[4.5.7.5]]",
+ a:["Monitor planned versus actual costs, liabilities, and expected/forecast costs, comparing them against project progress using performance indicators such as earned value.","Analyse variances and their causes.","Signal cost breaches and suggest an appropriate mitigation plan in accordance with the project's governance — escalating for a decision if the breach cannot be absorbed by existing contingencies."]},
+
+/* ---------------- 4.5.8 RESOURCES ---------------- */
+{t:"resources",q:"What is the purpose of the Resources competence element?",
+ a:["To enable the PM to ensure the required resources — people, expertise, facilities, equipment, materials, infrastructure and tools — are available and assigned as needed to deliver the project's objectives.","It includes a strategy for acquiring, optimising and continuously monitoring resource utilisation."]},
+{t:"resources",q:"Name the five KCIs of Resources.",
+ a:["[[4.5.8.1]] Develop a strategic resource plan to deliver the project","[[4.5.8.2]] Define the quality and quantity of resources required","[[4.5.8.3]] Identify potential sources of resources and negotiate their acquisition","[[4.5.8.4]] Allocate and distribute resources according to defined need","[[4.5.8.5]] Evaluate resource usage and take corrective actions"]},
+{t:"resources",q:"Explain the make-or-buy decision in resourcing. [[4.5.8.3]]",
+ a:["The PM must decide whether to source resources internally or externally.","Internal acquisition is usually determined by availability and quality; external acquisition is more complex, requiring contractual and commercial agreements.","Many organisations provide sourcing guidelines that must be followed, particularly for 'make or buy' decisions.","The PM must engage with and negotiate resource availability from providers."]},
+{t:"resources",q:"Describe the steps involved in resource allocation. [[4.5.8.4]]",
+ a:["Examine each activity in the network and identify the resource required (person, skill, equipment).","Estimate the amount required (full-time, part-time, etc.).","Aggregate the resources required by type against time to produce a resource histogram.","Compare resources required against availability, and review and adjust the allocation as needed."]},
+{t:"resources",q:"Why is resourcing a continuous process rather than a one-off planning activity? [[4.5.8.5]]",
+ a:["Resource needs and availability change regularly due to both controllable and uncontrollable factors — e.g. unexpected events such as equipment failure or scarcity.","Resource allocation must be continuously monitored and adjusted throughout the whole project lifecycle, not just set once during planning."]},
+{t:"resources",q:"How does a project manager evaluate resource usage and respond to problems? [[4.5.8.5]]",
+ a:["Monitor productivity and take corrective action where needed; regularly evaluate the quality and availability of assigned resources.","For external resources, the PM may need to consult suppliers/contractors to improve or replace a resource.","Resource performance may require development, coaching or specific training — negotiated and coordinated with the relevant resource supplier or line management."]},
+
+/* ---------------- 4.5.12 STAKEHOLDERS ---------------- */
+{t:"stake",q:"Define a stakeholder and explain the purpose of the Stakeholders competence element.",
+ a:["A stakeholder is any person, group or organisation that has an interest in, or can be affected by, the actions, decisions or outcomes of a project — including sponsors, clients, users, suppliers, alliances and partners.","The purpose is to manage stakeholder interests, influence and expectations, engage stakeholders, and effectively manage their expectations throughout the project."]},
+{t:"stake",q:"Name the five KCIs of Stakeholders.",
+ a:["[[4.5.12.1]] Identify stakeholders and analyse their interests and influence","[[4.5.12.2]] Develop and maintain a stakeholder strategy and communication plan","[[4.5.12.3]] Engage with the executive, sponsors and higher management","[[4.5.12.4]] Engage with users, partners, suppliers and other stakeholders","[[4.5.12.5]] Organise and maintain networks and alliances"]},
+{t:"stake",q:"Explain how stakeholder analysis is conducted. [[4.5.12.1]]",
+ a:["The PM identifies all project stakeholders, analyses the interest of each stakeholder group, and determines whether their influence is beneficial or harmful.","This is often visualised on a power/interest grid, which maps stakeholders by power and interest, guiding the engagement strategy for each quadrant (manage closely, keep satisfied, keep informed, monitor).","Analysis is conducted at project start and maintained throughout, since stakeholders can emerge, change or become irrelevant over time."]},
+{t:"stake",q:"What should a stakeholder communication plan contain? [[4.5.12.2]]",
+ a:["What (and when) the project will deliver to each stakeholder group, including the messages, channels and timing of both formal and informal engagement, so stakeholders do not develop wrongly-held expectations.","Since every communication is two-sided, the plan should build in feedback mechanisms.","It should be regularly reviewed and updated as circumstances change."]},
+{t:"stake",q:"Compare how a PM engages with executives/sponsors versus users and suppliers. [[4.5.12.3]] [[4.5.12.4]]",
+ a:["Executives and sponsors typically supply budget and decide on resource priority and requirements, so the PM must establish a good working relationship, keep open communication and manage their expectations — they can also act as ambassadors given their status and connections.","Users provide information on needs/requirements and how deliverables will be used, requiring early and thorough involvement.","Suppliers must be selected carefully via formal contracts, as they provide resources, knowledge or sub-products essential to delivery."]},
+{t:"stake",q:"How does a project manager organise and maintain networks and alliances? [[4.5.12.5]]",
+ a:["Formal alliances require negotiated and documented agreements, with an implemented plan for cooperation, defined performance measures, and an agreed exit strategy.","All networks and alliances should be evaluated frequently and improved where necessary.","Since organisations often want to work with the same partners on future projects, ending a formal relationship needs to be handled carefully, whereas informal networks are less structured and tend to persist beyond the project's end."]},
+
+/* ---------------- EXAM TECHNIQUE ---------------- */
+{t:"technique",q:"What is the format of the IPMA Level D SAQ exam?",
+ a:["You MUST answer 12 questions out of 14. Each question stands alone and is worth five marks.","The exam lasts two hours / 120 minutes — roughly two minutes to read each question and eight minutes to answer it.","Each question addresses one competence element. Unanswered questions score zero; there is no negative marking.","To pass you must score 60% — that is 36/60. You MUST attempt 12 questions; if you don't, you will be assessed as having failed."]},
+{t:"technique",q:"What are the assessors looking for in a comprehensive answer?",
+ a:["Five clear paragraphs, with a response that addresses the specifics in relation to the question.","Use the style of Point–Evidence–Explanation: make your point, provide evidence to back it up, then develop and explain the evidence further.","Do not combine or confuse content from other competence elements or KCIs.","If a question asks for two explanations/descriptions, then two must be given to achieve higher marks."]},
+{t:"technique",q:"Define the three exam command words: discuss, explain, describe.",
+ a:["Discuss — write about a topic taking into account different concepts or ideas; typically requires a coherent argument of different ways to approach a topic.","Explain — give an account of the purpose(s) or reason(s).","Describe — give an account including all the relevant characteristics, qualities and events.","In all cases the response must be clear and articulate, and arguments logical and well-structured — the assessor needs to understand what you are trying to say to award marks."]},
+{t:"technique",q:"Explain the difference between a 'how' question and a 'why' question.",
+ a:["'Why' refers to the cause of something; 'how' refers to what makes something happen.","Example — 'Explain why a PM should estimate the budget?' Answer: to test viability, establish if the project is affordable, ensure the business case is complete, compare delivery option costs.","Example — 'Explain how a PM should estimate the budget?' Answer: using estimating techniques such as analytical and parametric, building a Cost Breakdown Structure, ensuring adequate provisions for risk.","Candidates often confuse the two and lose marks by giving an inappropriate response."]},
+{t:"technique",q:"How should you approach a 'describe' question to maximise marks?",
+ a:["Give the required number of descriptions specified in the question.","Identify the verb, the broad topic area or context, and the specific aspect being asked about.","For 'Describe how motivation is used to improve the performance of a project team': the verb is 'describe', the context is 'improve the performance of a project team', and the specific aspect is 'motivation'.","A response focusing on the general concept alone would receive very few marks; placing it in the specific context has a far greater chance of high marks."]},
+{t:"technique",q:"Describe the ABC approach to selecting which questions to answer.",
+ a:["Read through all the questions and make a note of those you are more confident of answering. A indicates high confidence, B medium confidence, C low confidence.","After the initial review, begin with 'A' questions, followed by 'B', followed by 'C'.","This gives the greatest chance of achieving the highest marks possible, and keeps a greater focus on timing to determine how best to score extra marks."]},
+{t:"technique",q:"What are the key rules of exam time management?",
+ a:["You must provide responses to 12 out of 14 questions; two minutes to read and understand each question, leaving eight minutes to answer.","Use your watch or clock to carefully keep track of the time. DO NOT spend extra time on questions — this is a very common cause of failure.","Only the first 12 answers will be marked, so DO NOT answer any additional questions.","Practise answering sample questions and timing yourself."]},
+{t:"technique",q:"Summarise the key exam technique reminders.",
+ a:["Read the question — so many people answer the question they thought they had been asked rather than the actual one. Read it at least twice and analyse its content.","Remember the difference between a 'why' question and a 'how' question.","Manage your time and answer 12 out of 14 questions only.","Good technique is very important for exam success."]},
+];
+CARDS.forEach((c,i)=>c.id="c"+i);
+
+/* ================= PERSISTENCE ================= */
+const STORE_KEY="ipma_saq_mastery_v2";
+let mastery={};
+const artifactStore=(typeof window!=="undefined"&&window.storage&&typeof window.storage.get==="function")?window.storage:null;
+function lsAvailable(){try{localStorage.setItem("__t","1");localStorage.removeItem("__t");return true;}catch(e){return false;}}
+const hasLS=lsAvailable();
+async function loadMastery(){
+  try{
+    if(artifactStore){const r=await artifactStore.get(STORE_KEY);if(r&&r.value)mastery=JSON.parse(r.value)||{};}
+    else if(hasLS){const v=localStorage.getItem(STORE_KEY);if(v)mastery=JSON.parse(v)||{};}
+  }catch(e){}
+}
+async function saveMastery(){
+  try{
+    if(artifactStore){await artifactStore.set(STORE_KEY,JSON.stringify(mastery));}
+    else if(hasLS){localStorage.setItem(STORE_KEY,JSON.stringify(mastery));}
+  }catch(e){}
+}
+
+/* ================= STATE ================= */
+let areaFilter="all", topicFilter="all", mode="all", flipped=false, order=[], pos=0, shuffled=false;
+const $=s=>document.querySelector(s);
+const stage=$("#stage");
+
+/* ================= FILTERS ================= */
+function cardsInArea(a){return CARDS.filter(c=>a==="all"||TOPICS[c.t].area===a);}
+function buildAreaChips(){
+  const entries=[["all","All"]].concat(AREAS.map(a=>[a,a]));
+  $("#areaChips").innerHTML=entries.map(([k,l])=>{
+    const cls=k==="all"?"":"a-"+AREA_CLASS[k];
+    return `<button class="chip ${cls}${k===areaFilter?" active":""}" data-a="${k}">${l}<span class="c-count">${cardsInArea(k).length}</span></button>`;
+  }).join("");
+  $("#areaChips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{
+    areaFilter=b.dataset.a; topicFilter="all"; rebuild();
+  });
+}
+function buildTopicChips(){
+  const keys=Object.keys(TOPICS).filter(k=>areaFilter==="all"||TOPICS[k].area===areaFilter);
+  const entries=[["all","All"]].concat(keys.map(k=>[k,TOPICS[k].code==="—"?TOPICS[k].name:TOPICS[k].code+" "+TOPICS[k].name]));
+  $("#topicChips").innerHTML=entries.map(([k,l])=>{
+    const n=k==="all"?cardsInArea(areaFilter).length:CARDS.filter(c=>c.t===k).length;
+    return `<button class="chip${k===topicFilter?" active":""}" data-t="${k}">${l}<span class="c-count">${n}</span></button>`;
+  }).join("");
+  $("#topicChips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{topicFilter=b.dataset.t;rebuild();});
+}
+function pool(){
+  return CARDS.filter(c=>(areaFilter==="all"||TOPICS[c.t].area===areaFilter)&&(topicFilter==="all"||c.t===topicFilter));
+}
+function rebuild(){
+  let p=pool();
+  if(mode==="weak")p=p.filter(c=>mastery[c.id]!=="g");
+  order=p.map(c=>c.id);
+  if(shuffled)shuffle(order);
+  pos=0;flipped=false;
+  buildAreaChips();buildTopicChips();updateProgress();render();
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+
+/* ================= PROGRESS ================= */
+function updateProgress(){
+  const p=pool();let g=0,a=0,r=0,u=0;
+  p.forEach(c=>{const m=mastery[c.id];if(m==="g")g++;else if(m==="a")a++;else if(m==="r")r++;else u++;});
+  const tot=p.length||1;
+  $("#segG").style.width=(g/tot*100)+"%";$("#segA").style.width=(a/tot*100)+"%";$("#segR").style.width=(r/tot*100)+"%";
+  $("#cntG").textContent=g;$("#cntA").textContent=a;$("#cntR").textContent=r;$("#cntU").textContent=u;
+}
+
+/* ================= RENDER ================= */
+const STATUS={g:["Mastered","st-g","var(--green)"],a:["Almost","st-a","var(--amber)"],r:["Review","st-r","var(--red)"],u:["Unseen","st-u","var(--line)"]};
+function fmt(arr){return arr.map(p=>"<p>"+p.replace(/\[\[(.+?)\]\]/g,'<span class="kci">$1</span>')+"</p>").join("");}
+function render(){
+  if(order.length===0){renderEmpty();return;}
+  if(pos>=order.length)pos=order.length-1;
+  const card=CARDS.find(c=>c.id===order[pos]);
+  const topic=TOPICS[card.t], ac=AREA_CLASS[topic.area];
+  const st=mastery[card.id]||"u", [label,cls]=STATUS[st];
+  const edge=AREA_COLOR[topic.area];
+  stage.innerHTML=`
+    <div class="scene">
+      <div class="card${flipped?" flipped":""}" id="card">
+        <div class="face front" style="--edge:${edge}">
+          <div class="meta">
+            <span class="code c-${ac}">${topic.code==="—"?"Technique":topic.code}</span>
+            <span class="topic-tag">${topic.name}</span>
+            <span class="status-pill ${cls}">${label}</span>
+          </div>
+          <div class="q-label">Question</div>
+          <div class="q-text">${card.q.replace(/\[\[(.+?)\]\]/g,"$1")}</div>
+          <div class="flip-hint">↺ Tap card or press <span class="kbd">Space</span> to reveal the model answer</div>
+        </div>
+        <div class="face back" style="--edge:${edge}">
+          <div class="meta">
+            <span class="code c-${ac}">${topic.code==="—"?"Technique":topic.code}</span>
+            <span class="topic-tag">${topic.name}</span>
+            <span class="status-pill ${cls}">${label}</span>
+          </div>
+          <div class="a-label">Model answer</div>
+          <div class="a-text">${fmt(card.a)}</div>
+          <div class="flip-hint">Rate yourself below — be honest, it drives the drill</div>
+        </div>
+      </div>
+    </div>
+    <div class="rate">
+      <button class="r-red" data-rate="r">Review again<span class="sub-k">press 1</span></button>
+      <button class="r-amber" data-rate="a">Almost<span class="sub-k">press 2</span></button>
+      <button class="r-green" data-rate="g">Mastered<span class="sub-k">press 3</span></button>
+    </div>
+    <div class="nav">
+      <button class="btn" id="prevBtn">← Prev</button>
+      <span class="counter"><b>${pos+1}</b> / ${order.length}${mode==="weak"?" · weak":""}</span>
+      <button class="btn" id="nextBtn">Next →</button>
+    </div>`;
+  $("#card").onclick=()=>{flipped=!flipped;$("#card").classList.toggle("flipped");};
+  $("#prevBtn").onclick=()=>go(-1);
+  $("#nextBtn").onclick=()=>go(1);
+  stage.querySelectorAll("[data-rate]").forEach(b=>b.onclick=e=>{e.stopPropagation();rate(b.dataset.rate);});
+}
+function renderEmpty(){
+  const weak=(mode==="weak");
+  stage.innerHTML=`<div class="empty">
+    <div class="big">✓</div>
+    <h2>${weak?"Nothing weak here":"No cards"}</h2>
+    <p>${weak?"Every card in this filter is rated <b>Mastered</b>. Switch to “All cards” to keep reviewing, or pick another area.":"No cards match this filter."}</p>
+    <button class="btn" id="showAll">Show all cards</button></div>`;
+  const b=$("#showAll");
+  if(b)b.onclick=()=>{document.querySelector('#modeToggle button[data-mode=all]').click();};
+}
+function go(d){if(order.length===0)return;pos=(pos+d+order.length)%order.length;flipped=false;render();}
+function rate(level){
+  if(order.length===0)return;
+  const id=order[pos];mastery[id]=level;saveMastery();updateProgress();
+  if(mode==="weak"&&level==="g"){
+    order.splice(pos,1);
+    if(order.length===0){render();return;}
+    if(pos>=order.length)pos=0;
+    flipped=false;render();
+  }else go(1);
+}
+
+/* ================= TOOLBAR ================= */
+$("#modeToggle").querySelectorAll("button").forEach(b=>b.onclick=()=>{
+  $("#modeToggle").querySelectorAll("button").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");mode=b.dataset.mode;rebuild();
+});
+$("#shuffleBtn").onclick=()=>{shuffled=true;rebuild();};
+$("#resetBtn").onclick=()=>{if(confirm("Reset all mastery ratings? This clears your progress on every card."))
+  {mastery={};saveMastery();rebuild();}};
+
+/* ================= KEYBOARD ================= */
+document.addEventListener("keydown",e=>{
+  if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")return;
+  if(e.code==="Space"){e.preventDefault();const c=$("#card");if(c){flipped=!flipped;c.classList.toggle("flipped");}}
+  else if(e.key==="ArrowRight")go(1);
+  else if(e.key==="ArrowLeft")go(-1);
+  else if(e.key==="1")rate("r");
+  else if(e.key==="2")rate("a");
+  else if(e.key==="3")rate("g");
+});
+
+/* ================= INIT ================= */
+(async function init(){await loadMastery();rebuild();})();
+</script>
